@@ -1,8 +1,8 @@
 all:
-	gcc -Wall -pedantic -g -lSDL2 -lGL -lGLEW -o triangle src/*.c
+	gcc -Wall -pedantic -g -lSDL2 -lGL -lGLEW -o renderer src/*.c
 
 run:
-	./triangle
+	./renderer
 
 clean:
-	rm ./triangle
+	rm ./renderer
