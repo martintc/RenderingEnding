@@ -21,3 +21,11 @@ char* read_file(const char* path) {
 
   return content;
 }
+
+FILE* open_file(const char* path) {
+  FILE* file = fopen(path, "r");
+  if(file == NULL) {
+    return NULL;
+  }
+  return file;
+}

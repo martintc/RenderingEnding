@@ -5,5 +5,6 @@
 #include <stdlib.h>
 
 char* read_file(const char* path);
+FILE* open_file(const char* path);
 
 #endif
