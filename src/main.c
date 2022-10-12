@@ -8,6 +8,10 @@
 #include "shader.h"
 #include "vao.h"
 #include "vbo.h"
+#include "object.h"
+#include "objectreader.h"
+#include "vector.h"
+#include "face.h"
 
 static const GLuint WIDTH = 512;
 static const GLuint HEIGHT = 512;
@@ -173,13 +177,100 @@ void shader_setup() {
   attribute_coord2d = glGetAttribLocation(program, "coord2d");
 }
 
+/* int main(void) { */
+/*   if(initialize_sdl_opengl() < 0) { */
+/*     return 0; */
+/*   } */
+
+/*   // initialize glew */
+/*   glewInit();  */
+
+/*   glViewport(0, 0, 512, 512); */
+
+/*   char* vertex_shader_source = "shaders/vertex.vert"; */
+/*   char* fragment_shader_source = "shaders/fragment.frag"; */
+
+/*   //shader_setup(); */
+  
+/*   struct shader s = create_shader_program(vertex_shader_source, fragment_shader_source); */
+
+/*   // ordering matters for generating */
+/*   /\* glGenVertexArrays(1, &vao); *\/ */
+/*   struct vao* vao = create_vao(); */
+/*   /\* glGenBuffers(1, &vbo); *\/ */
+/*   struct vbo* v = create_vbo(vertices, sizeof(vertices)/sizeof(vertices[0])); */
+/*   /\* glGenBuffers(1, &ebo); *\/ */
+/*   struct ebo* e = create_ebo(indices, sizeof(indices)/sizeof(indices[0])); */
+  
+/*   /\* glBindVertexArray(vao); *\/ */
+/*   bind_vao(vao); */
+/*   /\* glBindBuffer(GL_ARRAY_BUFFER, vbo); *\/ */
+/*   bind_vbo(v); */
+/*   /\* glBufferData(GL_ARRAY_BUFFER, sizeof(vertices), vertices, GL_STATIC_DRAW); *\/ */
+/*   buffer_vbo_data(v); */
+  
+/*   /\* glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, ebo); *\/ */
+/*   bind_ebo(e); */
+/*   /\* glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(indices), indices, GL_STATIC_DRAW); *\/ */
+/*   buffer_ebo_data(e); */
+
+/*   /\* glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, sizeof(float) * 3, 0); *\/ */
+/*   // only a single vertex array, so 0 */
+/*   /\* glEnableVertexAttribArray(0); *\/ */
+/*   /\* enable_vao(vao); *\/ */
+/*   link_vao_vbo(v, 0, 3, GL_FLOAT, 6 * sizeof(float), (void*)0); */
+/*   link_vao_vbo(v, 1, 3, GL_FLOAT, 6 * sizeof(float), (void*)(3 * sizeof(float))); */
+  
+/*   unbind_vbo(); */
+/*   /\* glBindVertexArray(0); *\/ */
+/*   unbind_vao(); */
+/*   /\* glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0); *\/ */
+/*   unbind_ebo(); */
+
+/*   /\* glClearColor(0.0f, 0.0f, 0.0f, 1.0f); *\/ */
+/*   /\* glClear(GL_COLOR_BUFFER_BIT); *\/ */
+
+/*   /\* SDL_GL_SwapWindow(window); *\/ */
+  
+/*   SDL_Event event; */
+  
+/*   /\* main loop *\/ */
+/*   while(1) { */
+
+/*     glClearColor(0.0f, 0.0f, 0.0f, 1.0f); */
+/*     glClear(GL_COLOR_BUFFER_BIT); */
+
+/*     activate(&s); */
+/*     /\* glBindVertexArray(vao); *\/ */
+/*     bind_vao(vao); */
+/*     /\* glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, ebo); *\/ */
+/*     bind_ebo(e); */
+/*     /\* glDrawArrays(GL_TRIANGLES, 0, 3); *\/ */
+/*     glDrawElements(GL_TRIANGLES, sizeof(indices) / sizeof(GLuint), GL_UNSIGNED_INT, (void*)0); */
+
+/*     SDL_GL_SwapWindow(window); */
+    
+/*     if (SDL_PollEvent(&event) && event.type == SDL_QUIT) { */
+/*       break; */
+/*     } */
+/*   } */
+
+/*   delete(&s); */
+/*   delete_vbo(v); */
+/*   destroy(); */
+  
+/*   return 0; */
+/* } */
+
+// testing object reader
+
 int main(void) {
   if(initialize_sdl_opengl() < 0) {
     return 0;
   }
 
   // initialize glew
-  glewInit(); 
+  glewInit();
 
   glViewport(0, 0, 512, 512);
 
@@ -189,14 +280,18 @@ int main(void) {
   //shader_setup();
   
   struct shader s = create_shader_program(vertex_shader_source, fragment_shader_source);
+  
+  char* pumpkin = "samples/pumpkin_tall_10k.obj";
+
+  struct object *obj = read_object(pumpkin);
 
   // ordering matters for generating
   /* glGenVertexArrays(1, &vao); */
   struct vao* vao = create_vao();
   /* glGenBuffers(1, &vbo); */
-  struct vbo* v = create_vbo(vertices, sizeof(vertices)/sizeof(vertices[0]));
+  struct vbo* v = create_vbo(obj->vertices, obj->v_num);
   /* glGenBuffers(1, &ebo); */
-  struct ebo* e = create_ebo(indices, sizeof(indices)/sizeof(indices[0]));
+  struct ebo* e = create_ebo(obj->faces, obj->f_num);
   
   /* glBindVertexArray(vao); */
   bind_vao(vao);
@@ -214,8 +309,8 @@ int main(void) {
   // only a single vertex array, so 0
   /* glEnableVertexAttribArray(0); */
   /* enable_vao(vao); */
-  link_vao_vbo(v, 0, 3, GL_FLOAT, 6 * sizeof(float), (void*)0);
-  link_vao_vbo(v, 1, 3, GL_FLOAT, 6 * sizeof(float), (void*)(3 * sizeof(float)));
+  link_vao_vbo(v, 0, 3, GL_FLOAT, 3 * sizeof(float), (void*)0);
+  /* link_vao_vbo(v, 1, 3, GL_FLOAT, 3 * sizeof(float), (void*)(3 * sizeof(float))); */
   
   unbind_vbo();
   /* glBindVertexArray(0); */
@@ -250,10 +345,11 @@ int main(void) {
       break;
     }
   }
-
+  
   delete(&s);
   delete_vbo(v);
   destroy();
+  object_free(obj);
   
   return 0;
 }
