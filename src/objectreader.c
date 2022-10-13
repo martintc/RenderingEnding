@@ -43,8 +43,8 @@ struct object* read_object(char* path) {
   struct object *obj = malloc(sizeof(struct object));
   obj->v_num = v;
   obj->f_num = f;
-  obj->vertices = malloc(sizeof(struct vector3float) * v);
-  obj->faces = malloc(sizeof(struct face) * f);
+  obj->vertices = malloc(sizeof(GLfloat) * 3 * v);
+  obj->faces = malloc(sizeof(GLuint) * 3 * f);
   
   // fill in vertices
   float i, j, k = 0.0;
@@ -58,17 +58,29 @@ struct object* read_object(char* path) {
   while((sscanf(rest_string, "%c %f %f %f %n", &c, &i, &j, &k, &pos)) != EOF) {
     /* printf("Line recv: %c %f %f %f", c, i, j, k); */
     if (c == 'v') {
-      obj->vertices[v_i].i = i;
-      obj->vertices[v_i].j = j;
-      obj->vertices[v_i].k = k;
+      /* obj->vertices[v_i].i = i; */
+      /* obj->vertices[v_i].j = j; */
+      /* obj->vertices[v_i].k = k; */
+      /* v_i++; */
+      obj->vertices[v_i] = (GLfloat)i;
+      v_i++;
+      obj->vertices[v_i] = (GLfloat)j;
+      v_i++;
+      obj->vertices[v_i] = (GLfloat)k;
       v_i++;
     }
     // if line starts with an f, it is a face
     // populate face line
     if (c == 'f') {
-      obj->faces[f_i].i = (int)i;
-      obj->faces[f_i].j = (int)j;
-      obj->faces[f_i].k = (int)k;
+      /* obj->faces[f_i].i = (int)i; */
+      /* obj->faces[f_i].j = (int)j; */
+      /* obj->faces[f_i].k = (int)k; */
+      obj->faces[f_i] = (GLuint)i;
+      f_i++;
+      obj->faces[f_i] = (GLuint)j;
+      f_i++;
+      obj->faces[f_i] = (GLuint)k;
+      f_i++;
     }
     rest_string = &rest_string[pos];
   }

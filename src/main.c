@@ -337,7 +337,7 @@ int main(void) {
     /* glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, ebo); */
     bind_ebo(e);
     /* glDrawArrays(GL_TRIANGLES, 0, 3); */
-    glDrawElements(GL_TRIANGLES, sizeof(indices) / sizeof(GLuint), GL_UNSIGNED_INT, (void*)0);
+    glDrawElements(GL_TRIANGLES, obj->f_num, GL_UNSIGNED_INT, (void*)0);
 
     SDL_GL_SwapWindow(window);
     
