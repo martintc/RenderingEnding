@@ -2,6 +2,7 @@
 
 #include <stdio.h>
 #include <stdlib.h>
+#include <string.h>
 
 struct vbo* create_vbo(GLfloat* vertices, long int size) {
   fprintf(stderr, "%ld\n", size);
@@ -10,9 +11,10 @@ struct vbo* create_vbo(GLfloat* vertices, long int size) {
   glGenBuffers(1, &buffer);
   /* glGenBuffers(1, &v->id); */
   v->id = buffer;
-  v->size = size;
-  v->vertices = malloc(sizeof(GLfloat) * size);
-  for (int i = 0; i < (int)size; i++) {
+  v->size = size * 3;
+  printf("Stored in size: %ld\n", v->size);
+  v->vertices = malloc(sizeof(GLfloat) * v->size);
+  for (int i = 0; i < v->size; i++) {
     v->vertices[i] = vertices[i];
   }
   return v;

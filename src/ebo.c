@@ -1,14 +1,15 @@
 #include "ebo.h"
 
 #include <stdlib.h>
+#include <string.h>
 
 struct ebo* create_ebo(GLuint* indices, long int size) {
   struct ebo* e = malloc(sizeof(struct ebo));
   GLuint buffer;
   glGenBuffers(1, &buffer);
   e->id = buffer;
-  e->size = size;
-  e->indices = malloc(sizeof(GLuint) * size);
+  e->size = size * 3;
+  e->indices = malloc(sizeof(GLuint) * e->size);
   for (int i = 0; i < (int)e->size; i++) {
     e->indices[i] = indices[i];
   }
