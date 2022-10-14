@@ -6,7 +6,7 @@
 
 struct ebo {
   GLuint id;
-  long int size;
+  unsigned int size;
   GLuint* indices;
 };
 

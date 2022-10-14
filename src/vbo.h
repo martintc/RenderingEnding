@@ -6,7 +6,7 @@
 
 struct vbo {
   GLuint id;
-  long int size;
+  unsigned size;
   GLfloat* vertices;
 };
 

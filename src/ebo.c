@@ -2,6 +2,7 @@
 
 #include <stdlib.h>
 #include <string.h>
+#include <stdio.h>
 
 struct ebo* create_ebo(GLuint* indices, long int size) {
   struct ebo* e = malloc(sizeof(struct ebo));
@@ -10,7 +11,7 @@ struct ebo* create_ebo(GLuint* indices, long int size) {
   e->id = buffer;
   e->size = size * 3;
   e->indices = malloc(sizeof(GLuint) * e->size);
-  for (int i = 0; i < (int)e->size; i++) {
+  for (unsigned int i = 0; i < e->size; i++) {
     e->indices[i] = indices[i];
   }
   return e;

@@ -12,9 +12,8 @@ struct vbo* create_vbo(GLfloat* vertices, long int size) {
   /* glGenBuffers(1, &v->id); */
   v->id = buffer;
   v->size = size * 3;
-  printf("Stored in size: %ld\n", v->size);
   v->vertices = malloc(sizeof(GLfloat) * v->size);
-  for (int i = 0; i < v->size; i++) {
+  for (unsigned int i = 0; i < v->size; i++) {
     v->vertices[i] = vertices[i];
   }
   return v;

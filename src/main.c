@@ -276,23 +276,16 @@ int main(void) {
 
   char* vertex_shader_source = "shaders/vertex.vert";
   char* fragment_shader_source = "shaders/fragment.frag";
-
+  
   //shader_setup();
   
   struct shader s = create_shader_program(vertex_shader_source, fragment_shader_source);
   
-  /* char* pumpkin = "samples/pumpkin_tall_10k.obj"; */
+  char* pumpkin = "samples/pumpkin_tall_10k.obj";
+  char* triforce = "samples/triforce.obj";
   char* triangle = "samples/triangle.obj";
   
-  struct object *obj = read_object(triangle);
-
-  for (int i = 0; i < obj->v_num * 3; i++) {
-    printf("%f\n", obj->vertices[i]);
-  }
-  for (int i = 0; i < obj->f_num * 3; i++) {
-    printf("%d\n", obj->faces[i]);
-  }
-  printf("\n");
+  struct object *obj = read_object(triforce);
   
   // ordering matters for generating
   /* glGenVertexArrays(1, &vao); */
@@ -319,7 +312,8 @@ int main(void) {
   // only a single vertex array, so 0
   /* glEnableVertexAttribArray(0); */
   /* enable_vao(vao); */
-  link_vao_vbo(v, 0, 3, GL_FLOAT, 3 * sizeof(float), (void*)0);
+  // link_vao_vbo(v, 0, 3, GL_FLOAT, 3 * sizeof(GLfloat), (void*)0);
+  link_vao_vbo(v, 0, 3, GL_FLOAT, 0, (void*)0);
   /* link_vao_vbo(v, 1, 3, GL_FLOAT, 3 * sizeof(float), (void*)(3 * sizeof(float))); */
   
   unbind_vbo();
@@ -334,7 +328,7 @@ int main(void) {
   /* SDL_GL_SwapWindow(window); */
   
   SDL_Event event;
-  
+
   /* main loop */
   while(1) {
 

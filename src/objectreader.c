@@ -84,6 +84,8 @@ struct object* read_object(char* path) {
     }
     rest_string = &rest_string[pos];
   }
+
+  free(contents);
   
   return obj;
 }
