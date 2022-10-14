@@ -281,15 +281,25 @@ int main(void) {
   
   struct shader s = create_shader_program(vertex_shader_source, fragment_shader_source);
   
-  char* pumpkin = "samples/pumpkin_tall_10k.obj";
+  /* char* pumpkin = "samples/pumpkin_tall_10k.obj"; */
+  char* triangle = "samples/triangle.obj";
+  
+  struct object *obj = read_object(triangle);
 
-  struct object *obj = read_object(pumpkin);
-
+  for (int i = 0; i < obj->v_num * 3; i++) {
+    printf("%f\n", obj->vertices[i]);
+  }
+  for (int i = 0; i < obj->f_num * 3; i++) {
+    printf("%d\n", obj->faces[i]);
+  }
+  printf("\n");
+  
   // ordering matters for generating
   /* glGenVertexArrays(1, &vao); */
   struct vao* vao = create_vao();
   /* glGenBuffers(1, &vbo); */
   struct vbo* v = create_vbo(obj->vertices, obj->v_num);
+
   /* glGenBuffers(1, &ebo); */
   struct ebo* e = create_ebo(obj->faces, obj->f_num);
   
@@ -337,7 +347,7 @@ int main(void) {
     /* glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, ebo); */
     bind_ebo(e);
     /* glDrawArrays(GL_TRIANGLES, 0, 3); */
-    glDrawElements(GL_TRIANGLES, obj->f_num, GL_UNSIGNED_INT, (void*)0);
+    glDrawElements(GL_TRIANGLES, obj->f_num * 3, GL_UNSIGNED_INT, (void*)0);
 
     SDL_GL_SwapWindow(window);
     
