@@ -2,7 +2,8 @@
 
 #include<SDL2/SDL.h>
 #define GLEW_STATIC
-#include<GL/glew.h>
+#include <GL/glew.h>
+#include <cglm/cglm.h>
 
 #include "ebo.h"
 #include "shader.h"
