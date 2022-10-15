@@ -337,6 +337,25 @@ int main(void) {
     glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
     glClear(GL_COLOR_BUFFER_BIT);
 
+    /* Initialize matrices */
+    mat4 model = GLM_MAT4_IDENTITY_INIT;
+    mat4 view = GLM_MAT4_IDENTITY_INIT;
+    mat4 projection = GLM_MAT4_IDENTITY_INIT;
+
+    /* set model coordinates */
+
+    /* set view coordinates */
+
+    /* set projection coordinates */
+
+    /* load matrices to shaders */
+    int mLoc = glGetUniformLocation(s.id, "model");
+    glUniformMatrix4fv(mLoc, 1, GL_FALSE, (float*)model);
+    int vLoc = glGetUniformLocation(s.id, "view");
+    glUniformMatrix4fv(vLoc, 1, GL_FALSE, (float*)view);
+    int pLoc = glGetUniformLocation(s.id, "proj");
+    glUniformMatrix4fv(pLoc, 1, GL_FALSE, (float*)projection);
+    
     activate(&s);
     /* glBindVertexArray(vao); */
     bind_vao(vao);
