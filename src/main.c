@@ -284,8 +284,9 @@ int main(void) {
   char* pumpkin = "samples/pumpkin_tall_10k.obj";
   char* triforce = "samples/triforce.obj";
   char* triangle = "samples/triangle.obj";
+  char* box = "samples/box.obj";
   
-  struct object *obj = read_object(triforce);
+  struct object *obj = read_object(triangle);
   
   // ordering matters for generating
   /* glGenVertexArrays(1, &vao); */
