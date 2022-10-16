@@ -86,11 +86,11 @@ struct shader create_shader_program(const char* vertex_shader_source, const char
   return s;
 }
 
-void activate(struct shader* s) {
+void shader_activate(struct shader* s) {
   glUseProgram(s->id);
 }
 
-void delete(struct shader* s) {
+void shader_delete(struct shader* s) {
   glDeleteProgram(s->id);
 }
 

@@ -12,7 +12,7 @@ struct shader {
 };
 
 struct shader create_shader_program(const char* vertex_shader_source, const char* fragment_shader_source);
-void activate(struct shader* s);
-void delete(struct shader* s);
+void shader_activate(struct shader* s);
+void shader_delete(struct shader* s);
 
 #endif
