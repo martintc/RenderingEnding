@@ -1,4 +1,4 @@
-LIBS=-lSDL2 -lGL -lGLEW -L/usr/local/lib -lcglm
+LIBS=-lm -lSDL2 -lGL -lGLEW -L/usr/local/lib -lcglm
 INCLUDE=-I/usr/local/include
 
 all:
