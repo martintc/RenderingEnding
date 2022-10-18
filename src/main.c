@@ -18,20 +18,6 @@
 
 static const GLuint WIDTH = 800;
 static const GLuint HEIGHT = 600;
-/* static const GLchar* vertex_shader_source = */
-/* "#version 330 core\n" */
-/* "layout (location = 0) in vec3 aPos;\n" */
-/* "void main()\n" */
-/* "{\n" */
-/* "   gl_Position = vec4(aPos.x, aPos.y, aPos.z, 1.0);\n" */
-/* "}\0"; */
-/* static const GLchar* fragment_shader_source = */
-/* "#version 330 core\n" */
-/* "out vec4 FragColor;\n" */
-/* "void main()\n" */
-/* "{\n" */
-/* "   FragColor = vec4(0.8f, 0.3f, 0.02f, 1.0f);\n" */
-/* "}\n\0"; */
 
 GLfloat vertices[] = {
   // First three in the row are positions
@@ -139,47 +125,26 @@ int main(void) {
   char* triangle = "samples/triangle.obj";
   char* box = "samples/box.obj";
   
-  struct object *obj = read_object(pumpkin);
+  struct object *obj = read_object(triforce);
   
-  // ordering matters for generating
-  /* glGenVertexArrays(1, &vao); */
   struct vao* vao = create_vao();
-  /* glGenBuffers(1, &vbo); */
   struct vbo* v = create_vbo(obj->vertices, obj->v_num);
 
-  /* glGenBuffers(1, &ebo); */
   struct ebo* e = create_ebo(obj->faces, obj->f_num);
   
-  /* glBindVertexArray(vao); */
   bind_vao(vao);
-  /* glBindBuffer(GL_ARRAY_BUFFER, vbo); */
   bind_vbo(v);
-  /* glBufferData(GL_ARRAY_BUFFER, sizeof(vertices), vertices, GL_STATIC_DRAW); */
   buffer_vbo_data(v);
   
-  /* glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, ebo); */
   bind_ebo(e);
-  /* glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(indices), indices, GL_STATIC_DRAW); */
   buffer_ebo_data(e);
 
-  /* glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, sizeof(float) * 3, 0); */
-  // only a single vertex array, so 0
-  /* glEnableVertexAttribArray(0); */
-  /* enable_vao(vao); */
-  // link_vao_vbo(v, 0, 3, GL_FLOAT, 3 * sizeof(GLfloat), (void*)0);
   link_vao_vbo(v, 0, 3, GL_FLOAT, 0, (void*)0);
-  /* link_vao_vbo(v, 1, 3, GL_FLOAT, 3 * sizeof(float), (void*)(3 * sizeof(float))); */
   
   unbind_vbo();
-  /* glBindVertexArray(0); */
   unbind_vao();
-  /* glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0); */
   unbind_ebo();
 
-  /* glClearColor(0.0f, 0.0f, 0.0f, 1.0f); */
-  /* glClear(GL_COLOR_BUFFER_BIT); */
-
-  /* SDL_GL_SwapWindow(window); */
   
   SDL_Event event;
 
@@ -191,14 +156,14 @@ int main(void) {
 
   // enable depth testing
   glEnable(GL_DEPTH_TEST);
-  /* glDepthFunc(GL_ALWAYS); */
+  glDepthFunc(GL_ALWAYS);
 
   /* main loop */
   while(1) {
 
     // time stuff
     current_time = SDL_GetTicks();
-    if ((current_time - last_time) > 1000) {
+    if ((current_time - last_time) > (1 / 60)) {
       rotation += 0.5f;
       last_time = current_time;
     }
@@ -217,7 +182,14 @@ int main(void) {
     rvector[0] = 0.0f;
     rvector[1] = 0.0f;
     rvector[2] = 1.0f;
-    glm_rotate(model, glm_rad(rotation), rvector);
+    /* glm_rotate(model, glm_rad(rotation), rvector); */
+    glm_rotate_y(model, glm_rad(rotation), model);
+    /* Scaling matric */
+    vec3 svector;
+    svector[0] = 50.0f;
+    svector[1] = 50.0f;
+    svector[2] = 50.0f;
+    glm_scale(model, svector);
     
     /* set view coordinates */
     vec3 tvector;
