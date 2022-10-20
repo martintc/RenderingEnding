@@ -15,37 +15,26 @@
 #include "objectreader.h"
 #include "vector.h"
 #include "face.h"
+#include "camera.h"
 
 static const GLuint WIDTH = 800;
 static const GLuint HEIGHT = 600;
 
-GLfloat vertices[] = {
-  // First three in the row are positions
-  // Last three in the row are RGB values
-  -0.25f, 0.0f, 0.0f,  1.0f, 0.0f, 0.0f,
-  0.0f, 0.5f, 0.0f,  0.0f, 1.0f, 0.0f,
-  0.25f, 0.0f, 0.0f,  0.0f, 0.0f, 1.0f,
-  0.5f, -0.5f, 0.0f, 1.0f, 0.0f, 0.0f,
-  0.0f, -0.5f, 0.0f, 0.0f, 1.0f, 0.0f,
-  -0.5f, -0.5f, 0.0f, 0.0f, 0.0f, 1.0f
-};
-
-GLuint indices[] = {
-  0, 1, 2,
-  2, 3, 4,
-  4, 5, 0
-};
-
 /* GLfloat vertices[] = { */
-/*   -0.5f, -0.5f, 0.0f, */
-/*   0.5f, -0.5f, 0.0f, */
-/*   0.5f, 0.5f, 0.0f, */
-/*   -0.5f, 0.5f, 0.0f */
+/*   // First three in the row are positions */
+/*   // Last three in the row are RGB values */
+/*   -0.25f, 0.0f, 0.0f,  1.0f, 0.0f, 0.0f, */
+/*   0.0f, 0.5f, 0.0f,  0.0f, 1.0f, 0.0f, */
+/*   0.25f, 0.0f, 0.0f,  0.0f, 0.0f, 1.0f, */
+/*   0.5f, -0.5f, 0.0f, 1.0f, 0.0f, 0.0f, */
+/*   0.0f, -0.5f, 0.0f, 0.0f, 1.0f, 0.0f, */
+/*   -0.5f, -0.5f, 0.0f, 0.0f, 0.0f, 1.0f */
 /* }; */
 
 /* GLuint indices[] = { */
 /*   0, 1, 2, */
-/*   2, 3, 0 */
+/*   2, 3, 4, */
+/*   4, 5, 0 */
 /* }; */
 
 SDL_Window *window;
@@ -154,6 +143,13 @@ int main(void) {
 
   float rotation = 0.0f;
 
+  // initialize camera
+  vec3 t_pos;
+  t_pos[0] = 0.0f;
+  t_pos[1] = 0.0f;
+  t_pos[2] = 5.0f;
+  struct camera cam = camera_initialize(WIDTH, HEIGHT, t_pos);
+
   // enable depth testing
   glEnable(GL_DEPTH_TEST);
   glDepthFunc(GL_ALWAYS);
@@ -170,47 +166,51 @@ int main(void) {
 
     glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+
+    shader_activate(&s);
+    
     /* glClear(GL_COLOR_BUFFER_BIT); */
 
     /* Initialize matrices */
-    mat4 model = GLM_MAT4_IDENTITY_INIT;
-    mat4 view = GLM_MAT4_IDENTITY_INIT;
-    mat4 projection = GLM_MAT4_IDENTITY_INIT;
+    /* mat4 model = GLM_MAT4_IDENTITY_INIT; */
+    /* mat4 view = GLM_MAT4_IDENTITY_INIT; */
+    /* mat4 projection = GLM_MAT4_IDENTITY_INIT; */
 
     /* set model coordinates */
-    vec3 rvector;
-    rvector[0] = 0.0f;
-    rvector[1] = 0.0f;
-    rvector[2] = 1.0f;
+    /* vec3 rvector; */
+    /* rvector[0] = 0.0f; */
+    /* rvector[1] = 0.0f; */
+    /* rvector[2] = 1.0f; */
     /* glm_rotate(model, glm_rad(rotation), rvector); */
-    glm_rotate_y(model, glm_rad(rotation), model);
+    /* glm_rotate_y(model, glm_rad(rotation), model); */
     /* Scaling matric */
-    vec3 svector;
-    svector[0] = 50.0f;
-    svector[1] = 50.0f;
-    svector[2] = 50.0f;
-    glm_scale(model, svector);
+    /* vec3 svector; */
+    /* svector[0] = 50.0f; */
+    /* svector[1] = 50.0f; */
+    /* svector[2] = 50.0f; */
+    /* glm_scale(model, svector); */
     
     /* set view coordinates */
-    vec3 tvector;
-    tvector[0] = 1.0f;
-    tvector[1] = 1.0f;
-    tvector[2] = -100.0f;
-    glm_translate(view, tvector);
+    /* vec3 tvector; */
+    /* tvector[0] = 1.0f; */
+    /* tvector[1] = 1.0f; */
+    /* tvector[2] = -100.0f; */
+    /* glm_translate(view, tvector); */
     
     /* set projection coordinates */
     /* glm_ortho(0.0f, 5.0f, 5.0f, 0.0f, -1.0f, 100.0f, projection); */
-    glm_perspective(glm_rad(65.0f), (float)(WIDTH/HEIGHT), 0.1f, 500.f, projection);
+    /* glm_perspective(glm_rad(65.0f), (float)(WIDTH/HEIGHT), 0.1f, 500.f, projection); */
+
+    camera_matrix(&cam, 45.0f, 0.1f, 100.0f, &s, "cam_matrix");
 
     /* load matrices to shaders */
-    int mLoc = glGetUniformLocation(s.id, "model");
-    glUniformMatrix4fv(mLoc, 1, GL_FALSE, (float*)model);
-    int vLoc = glGetUniformLocation(s.id, "view");
-    glUniformMatrix4fv(vLoc, 1, GL_FALSE, (float*)view);
-    int pLoc = glGetUniformLocation(s.id, "proj");
-    glUniformMatrix4fv(pLoc, 1, GL_FALSE, (float*)projection);
+    /* int mLoc = glGetUniformLocation(s.id, "model"); */
+    /* glUniformMatrix4fv(mLoc, 1, GL_FALSE, (float*)model); */
+    /* int vLoc = glGetUniformLocation(s.id, "view"); */
+    /* glUniformMatrix4fv(vLoc, 1, GL_FALSE, (float*)view); */
+    /* int pLoc = glGetUniformLocation(s.id, "proj"); */
+    /* glUniformMatrix4fv(pLoc, 1, GL_FALSE, (float*)projection); */
     
-    shader_activate(&s);
     /* glBindVertexArray(vao); */
     bind_vao(vao);
     /* glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, ebo); */
@@ -219,9 +219,15 @@ int main(void) {
     glDrawElements(GL_TRIANGLES, obj->f_num * 3, GL_UNSIGNED_INT, (void*)0);
 
     SDL_GL_SwapWindow(window);
+
+    SDL_PollEvent(&event);
     
-    if (SDL_PollEvent(&event) && event.type == SDL_QUIT) {
+    if (event.type == SDL_QUIT) {
       break;
+    }
+
+    if (event.type == SDL_KEYDOWN) {
+      camera_handle_event(&cam, &event); 
     }
   }
   
